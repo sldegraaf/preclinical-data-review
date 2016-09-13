@@ -1,10 +1,22 @@
 ---
 title: 'Review: Statistical Analysis of Numerical Preclinical Radiobiological Data'
+author: 'Erik Bertelli, Stephanie DeGraaf, James Hicks'
 output: html_document
 ---
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  cache=FALSE, warning=FALSE, error=FALSE, message=FALSE, echo=FALSE,
+  results = 'hide', dev='png', dpi=150
+)
+```
+
+## Introduction
+This paper tackles the serious problem of detecting fraud with multiple reasonable and creative methods: digit analysis, mid-ratio review, and a triplicate model. The first two analyses are fairly straightforward, while the triplicate model requires more elaborate methodology. In this review, we aim to replicate Pitt and Hill's results using the provided data as well as offer criticism of specific points and the overall article.
+
+## Reproduction of Results
 ### Midratio Analysis
-To replicate the results of mid-ratio analysis, we used R to calculate the mid-ratios for the RTS data and Other Investigators data. As in Pitt and Hill's intial findings, our results indicate an overwhelming predominance of mid-ratio values in the 0.4-0.6 range in the RTS data, compared to a uniform distribution in the Others' data.  
+To replicate the results of mid-ratio analysis, we used R to calculate the mid-ratios for the RTS data and Other Investigators data. As in Pitt and Hill's intial findings, our results indicate an overwhelming predominance of mid-ratio values in the 0.4-0.6 range in the RTS data, compared to a uniform distribution in the Others' data. To ensure that the uniform distribution is what we should expect from genuine data, we also looked at the midratio on the Outside Lab's data, which Pitt and Hill did not include in their results. While there were fewer triples to consider, the distribution of the midratio still appeared uniform, supporting Pitt and Hill's conclusion that the RTS data is unusual.
 
 ```{r MRhistograms}
 data<- read.csv("Bishayee Colony Counts 10.27.97-3.8.01.csv")
@@ -19,10 +31,13 @@ cols<- as.matrix(data[,c("col1", "col2", "col3")])
 data$midratio<- sapply(1:dim(cols)[1], midratio)
 hist(as.numeric(as.character(data$midratio)), breaks = 30, 
      xlab = "Mid-ratio values", main = "Histogram of RTS Mid-ratio Values")
-
 others<- read.csv("Other Investigators in Lab.Colony Counts.4.23.92-11.27.02.csv")
 cols<- as.matrix(others[, c("col1", "col2", "col3")])
 others$midratio<- sapply(1:dim(cols)[1], midratio)
 hist(as.numeric(as.character(others$midratio)), breaks = 30,
-     xlab = "Mid-ratio values", main = "Histogram of Others Mid-ratio Values")
+     xlab = "Mid-ratio values", main = "Histogram of Outside Labs' Mid-ratio Values")
 ```
+
+
+### General Criticism
+The organization of the article could be significantly improved to make the article easier to read. Most generally, it was unclear to us why the analyses for the Colony and Coulter counts were reported as separate sections; it would be more coherent to report results for both datasets during the discussion of each method. 
