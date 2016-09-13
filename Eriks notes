@@ -1,0 +1,32 @@
+Abstract
+•	Note that they develop new model for the number close the mean
+o	Means we should have higher scrutiny on that part 
+•	Need to make sure we approach the p values correctly
+o	Not just p value that this one dataset would appear this way
+o	But instead that we would find at least one dataset that appears that way
+o	This approach is more realistic and conservative
+o	If the same individual has the anomalous data sets then we can account for that
+Introduction
+•	In terminal digits, how many digits required for trailing digit to be uniform?
+Data Studied
+•	Counts of the triple
+o	How correct is this Possoin assumption?
+o	Memoryless?
+Mid Ratio
+•	Why are there more data points for RTS then for the other investigators?
+Mean in triplicate samples
+•	I notice that the means in the pdf are all in the left columns
+•	Can we determine if a large number of them are in the left column in the entire data set?
+•	Or perhaps a run of means occurring in a given column?
+•	Can we say anything analytically about this maximum probability? 
+•	Could we use Chebyshev to bound the probability the data are close to the mean?
+o	Maybe this is the opposite direction we want?
+Hypothesis Test 1
+•	They only count triples with distance of 2 or more
+•	We should make sure this exclusion does not bias the results in some way
+Coulter Counts
+•	What is the incentive to fabricate these? Is there any? 
+•	Table 2 shows some of the outside lab have z scores under -2, why are those not flagged as well?
+Terminal Digit Analysis
+•	What are the assumptions of the Chi Squared Goodness of Fit test?
+
