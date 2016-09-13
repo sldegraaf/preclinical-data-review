@@ -2,13 +2,12 @@ data<- read.csv("Bishayee Colony Counts 10.27.97-3.8.01.csv")
 cols<- as.matrix(data[,c("col1", "col2", "col3")])
 
 midratio<- function(row){
-  low<- min(cols[row,"col1"], cols[row, "col2"], cols[row, "col3"])
-  high<- max(cols[row,"col1"], cols[row, "col2"], cols[row, "col3"])
-  mid<- setdiff(c(cols[row,"col1"], cols[row, "col2"], cols[row, "col3"]), c(low, high))
+  low<- min(cols[row,1], cols[row, 2], cols[row, 3])
+  high<- max(cols[row,1], cols[row, 2], cols[row, 3])
+  mid<- setdiff(c(cols[row,1], cols[row, 2], cols[row, 3]), c(low, high))
   midratio<- (mid-low)/(high-low)
   return(midratio)
 }
-
 data$midratio<- sapply(1:dim(cols)[1], midratio)
 # histogram of RTS midratio values: looks the same as in the paper
 hist(as.numeric(as.character(data$midratio)), breaks = 30, 
@@ -20,4 +19,12 @@ cols<- as.matrix(others[, c("col1", "col2", "col3")])
 others$midratio<- sapply(1:dim(cols)[1], midratio)
 # histogram of Others midratio values
 hist(as.numeric(as.character(others$midratio)), breaks = 30,
+     xlab = "Mid-ratio values", main = "Histogram of Others Mid-ratio Values")
+
+
+outside<- read.csv("Outside Lab 3.Colony Counts.2.4.10-5.21.12.csv")
+cols<- as.matrix(outside[, c("c1", "c2", "c3")])
+outside$midratio<- sapply(1:dim(cols)[1], midratio)
+# histogram of Outside midratio values
+hist(as.numeric(as.character(outside$midratio)), breaks = 20,
      xlab = "Mid-ratio values", main = "Histogram of Others Mid-ratio Values")
