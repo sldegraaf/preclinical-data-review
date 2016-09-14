@@ -18,6 +18,10 @@ This paper tackles the serious problem of detecting fraud with multiple reasonab
 ### Midratio Analysis
 To replicate the results of mid-ratio analysis, we used R to calculate the mid-ratios for the RTS data and Other Investigators data. As in Pitt and Hill's intial findings, our results indicate an overwhelming predominance of mid-ratio values in the 0.4-0.6 range in the RTS data, compared to a uniform distribution in the Others' data. To ensure that the uniform distribution is what we should expect from genuine data, we also looked at the midratio on the Outside Lab's data, which Pitt and Hill did not include in their results. While there were fewer triples to consider, the distribution of the midratio still appeared uniform, supporting Pitt and Hill's conclusion that the RTS data is unusual.
 
+Pitt and Hill did not include an analysis of the distribution of the Coulter counts. A histogram of the Coulter count mid-ratios did not reveal anything unusual about the distribution of mid-ratios; the distribution appeared uniform. 
+
+Later, Pitt and Hill created a probability model for the mid-ratios based on the probability of a midratio falling into the interval [0.4,0.6], using the given Poisson parameters. For the most conservative test, Pitt and Hill rely on the fact that for any value of lambda, the probability of falling into the ratio is less than 0.26. We applied this model to the Colony counts and conducted a binomial-based significance test. Out of $n = 1362$ triples, $824$ of the midratio values fell into the range [0.4, 0.6], yielding a highly significant p-value near zero.
+
 ```{r MRhistograms}
 data<- read.csv("Bishayee Colony Counts 10.27.97-3.8.01.csv")
 midratio<- function(row){
@@ -38,6 +42,14 @@ hist(as.numeric(as.character(others$midratio)), breaks = 30,
      xlab = "Mid-ratio values", main = "Histogram of Outside Labs' Mid-ratio Values")
 ```
 
+## Terminal Digit Analysis
+Criticism: Why did they choose the last digit to consider? (Did they peek at the data before choosing this as their metric for fraud?)
+
+## Triplicate Probability Models
+Criticisms: Poisson is a generalization of Binomial for n to infinity, p to 0. Is this applicable to this kind of data? Also, estimating lambda parameters with sample mean is concerning, since we only have 3 data points to estimate each mean.
+
+Chi-square test: sample size is probably too small for the distribution of the chi-square test statistics to converge to a chi-square distribution. Also, is the assumption of independence of each observation valid?
+
 
 ### General Criticism
-The organization of the article could be significantly improved to make the article easier to read. Most generally, it was unclear to us why the analyses for the Colony and Coulter counts were reported as separate sections; it would be more coherent to report results for both datasets during the discussion of each method. 
+The organization of the article could be significantly improved to make the article easier to read. Most generally, it was unclear why the analyses for the Colony and Coulter counts were reported as separate sections; it would be more coherent to report results for both datasets during the discussion of each method. 
