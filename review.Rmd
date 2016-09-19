@@ -15,41 +15,39 @@ knitr::opts_chunk$set(
 This paper tackles the serious problem of detecting fraud with multiple reasonable and creative methods: digit analysis, mid-ratio review, and a triplicate model. The first two analyses are fairly straightforward, while the triplicate model requires more elaborate methodology. In this review, we aim to replicate Pitt and Hill's results using the provided data as well as offer criticism of specific points and the overall article.
 
 ## Reproduction of Results
+### Terminal Digit Analysis
+
 ### Midratio Analysis
-To replicate the results of mid-ratio analysis, we used R to calculate the mid-ratios for the RTS data and Other Investigators data. As in Pitt and Hill's intial findings, our results indicate an overwhelming predominance of mid-ratio values in the 0.4-0.6 range in the RTS data, compared to a uniform distribution in the Others' data. To ensure that the uniform distribution is what we should expect from genuine data, we also looked at the midratio on the Outside Lab's data, which Pitt and Hill did not include in their results. While there were fewer triples to consider, the distribution of the midratio still appeared uniform, supporting Pitt and Hill's conclusion that the RTS data is unusual.
+To replicate the results of mid-ratio analysis, we calculated the mid-ratios for the RTS data and Other Investigators data. As in Pitt and Hill's intial findings, our results indicate an overwhelming predominance of mid-ratio values in the 0.4-0.6 range in the RTS data, compared to a uniform distribution in the Others' data. 
+To ensure that the uniform distribution is what we should expect from genuine data, we also looked at the midratio on the Outside Lab's data, which Pitt and Hill did not include in their results. While there were fewer triples to consider, the distribution of the midratio still appeared uniform, supporting Pitt and Hill's conclusion that the RTS data is unusual.
 
-Pitt and Hill did not include an analysis of the distribution of the Coulter counts. A histogram of the Coulter count mid-ratios did not reveal anything unusual about the distribution of mid-ratios; the distribution appeared uniform. 
+Pitt and Hill also did not include an analysis of the midratio distribution of the Coulter counts. When we analyzed the Coulter counts, the mid-ratios did not reveal anything unusual about the distribution of mid-ratios; the distribution appeared uniform.
 
-Later, Pitt and Hill created a probability model for the mid-ratios based on the probability of a midratio falling into the interval [0.4,0.6], using the given Poisson parameters. For the most conservative test, Pitt and Hill rely on the fact that for any value of lambda, the probability of falling into the ratio is less than 0.26. We applied this model to the Colony counts and conducted a binomial-based significance test. Out of $n = 1362$ triples, $824$ of the midratio values fell into the range [0.4, 0.6], yielding a highly significant p-value near zero.
+A probability model was also constructed for the mid-ratios based on the probability of a midratio falling into the interval [0.4,0.6], using the given Poisson parameters. For the most conservative test, Pitt and Hill rely on the fact that for any value of lambda, the probability of falling into the ratio is less than 0.26. We applied this model to the Colony counts and conducted a binomial-based significance test. Out of $n = 1362$ triples, $824$ of the midratio values fell into the range [0.4, 0.6], yielding a highly significant p-value near zero.
 
-```{r MRhistograms}
-data<- read.csv("Bishayee Colony Counts 10.27.97-3.8.01.csv")
-midratio<- function(row){
-  low<- min(cols[row,"col1"], cols[row, "col2"], cols[row, "col3"])
-  high<- max(cols[row,"col1"], cols[row, "col2"], cols[row, "col3"])
-  mid<- setdiff(c(cols[row,"col1"], cols[row, "col2"], cols[row, "col3"]), c(low, high))
-  midratio<- (mid-low)/(high-low)
-  return(midratio)
-}
-cols<- as.matrix(data[,c("col1", "col2", "col3")])
-data$midratio<- sapply(1:dim(cols)[1], midratio)
-hist(as.numeric(as.character(data$midratio)), breaks = 30, 
-     xlab = "Mid-ratio values", main = "Histogram of RTS Mid-ratio Values")
-others<- read.csv("Other Investigators in Lab.Colony Counts.4.23.92-11.27.02.csv")
-cols<- as.matrix(others[, c("col1", "col2", "col3")])
-others$midratio<- sapply(1:dim(cols)[1], midratio)
-hist(as.numeric(as.character(others$midratio)), breaks = 30,
-     xlab = "Mid-ratio values", main = "Histogram of Outside Labs' Mid-ratio Values")
-```
+### Triplicate Probability Models
 
-## Terminal Digit Analysis
+## Criticism of Analysis
+As a general point of criticism, the authors should specify that they formulated their hypotheses for detecting fraud prior to looking at the data. Due to randomness, it is always possible to find an unusual pattern in data if enough quantities are analyzed. Even if the data are genuine, it is still possible to obtain significant p-values for unusual characteristics of the data. 
+
+To demonstrate how easily this can be done, consider the data for the Other Investigators' Colony counts, which Pitt and Hill deem to be genuine. In the triplicates, it appears that the lowest value of the triple appears in the first column of the data quite often: in 230 of the 597 cases the lowest value is in the first column, a proportion of 0.385. In a "truly random" scenario, we would expect 1/3 of the lowest values to be in column 1. Thus, if we treat each triple as an independent random trial with probability 1/3, we can conduct a binomial test of significance on the 597 trials. Our sample estimate of 230/597 returns a p-value of 0.00437, indicating that the probablility of seeing the smallest value in the first column is significantly higher than it would be due to chance alone.
+
+This simple example serves to emphasize the importance of selecting metrics of fraud before exploring the data. The terminal digit analysis is a standard metric, but perhaps the midratio analysis seems to be a characteristic of the data observed after looking at the data. Pitt and Hill even acknowledge that their decision to test mid-ratios came *after* "[h]aving observed what appeared to us to be an unusual frequency of triples in RTS data containing a value close to their mean". As in the previous example, the significance of the midratio could simply be a random phenomenon in the data. 
+
+### Terminal Digit Analysis
 Criticism: Why did they choose the last digit to consider? (Did they peek at the data before choosing this as their metric for fraud?)
 
-## Triplicate Probability Models
+### Midratio Analysis
+
+
+### Triplicate Probability Models
 Criticisms: Poisson is a generalization of Binomial for n to infinity, p to 0. Is this applicable to this kind of data? Also, estimating lambda parameters with sample mean is concerning, since we only have 3 data points to estimate each mean.
 
 Chi-square test: sample size is probably too small for the distribution of the chi-square test statistics to converge to a chi-square distribution. Also, is the assumption of independence of each observation valid?
 
 
-### General Criticism
+### Final Comments
 The organization of the article could be significantly improved to make the article easier to read. Most generally, it was unclear why the analyses for the Colony and Coulter counts were reported as separate sections; it would be more coherent to report results for both datasets during the discussion of each method. 
+
+## Conclusion
+We have raised several technical points of consideration about Pitt and Hill's methodology, but in general, the evidence in the data is strong enough for us to arrive at the same conclusion as the authors that the RTS data is likely anomalous. 
