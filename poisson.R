@@ -39,7 +39,7 @@ colony.other <- colony.other %>% drop_na(col1, col2, col3)
 # Test I
 
 # replicate their numbers
-1-pbinom(689, 1343, .42)
+1 - pbinom(689, 1343, .42)
 
 # using our numbers
 rts.means <- round(colony$average)
@@ -47,7 +47,7 @@ rts.probs <- bound[rts.means]
 rts.k <- sum(apply(colony[, c("col1", "col2", "col3")],
                     1, function (x) round(mean(x)) %in% x))
 
-1-pbinom(rts.k, length(rts.means), max(rts.probs))
+1 - pbinom(rts.k - 1, length(rts.means), max(rts.probs))
 
 # doesn't replicate because the highest probability — i.e., our bound — is around 0.78 (for lambda = 1)
 # of course, as lambda grows, p quickly drops off, and most triples had considerably higher lambda
@@ -71,7 +71,7 @@ other.k <- sum(apply(colony.other[, c("col1", "col2", "col3")],
 # Test III
 # Normal approximation of poisson binomial
 
-# mu = sum(p); var = sum(p * q)
+# mu is sum(p); var is sum(p * q)
 pn.mean <- sum(rts.probs)
 pn.sd <- sqrt(sum(rts.probs * (1 - rts.probs)))
 
